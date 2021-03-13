@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
     }
-    private Socket client;
+    
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private String messageFromServer = "MEssage ";
     public void sendMessage (View view) {
@@ -70,5 +70,11 @@ public class MainActivity extends AppCompatActivity {
         });
         thread.start();
     }
+
+    public void showWiFi(View view){
+
+    }
+    
+    
 
 }
