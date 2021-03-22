@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -17,11 +19,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
     }
     
-    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+    public static final String EXTRA_MESSAGE =
+        "com.example.myfirstapp.MESSAGE";
     private String messageFromServer = "MEssage ";
+
     public void sendMessage (View view) {
 
         Log.d("SEND","s");
@@ -72,7 +76,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showWiFi(View view){
-
+        Log.d("PIDOR", "ZDES");
+        Intent intent =
+            new Intent(MainActivity.this, DisplayWiFiListActivity.class);
+        startActivity(intent);
     }
     
     
