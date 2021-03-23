@@ -10,6 +10,8 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -23,7 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class DisplayWiFiListActivity extends AppCompatActivity {
+public class DisplayWiFiListActivity extends AppCompatActivity implements MyAdapter.ItemClickListener {
 
     MyAdapter adapter;
     WifiManager wifi;
@@ -96,7 +98,14 @@ public class DisplayWiFiListActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.wifiList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MyAdapter(this,stringres);
+        adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        Log.d(TAG, "Click");
+        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Click");
+    }
 }

@@ -57,9 +57,11 @@ public class MyAdapter  extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             if(mClickListener != null) mClickListener.onItemClick(view,getAdapterPosition());
         }
     }
+
     String getItem(int id){
         return mData.get(id);
     }
+
     void setClickListener(ItemClickListener itemClickListener){
         this.mClickListener = itemClickListener;
     }
