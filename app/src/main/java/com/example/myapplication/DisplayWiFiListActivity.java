@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.LinkProperties;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -12,12 +13,14 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class DisplayWiFiListActivity extends AppCompatActivity {
@@ -41,10 +44,26 @@ public class DisplayWiFiListActivity extends AppCompatActivity {
     private void scanSuccess(){
         List<ScanResult> results = wifi.getScanResults();
         stringres = new ArrayList<String>();
+        String regex ="SSID: (\\S+),";
+        Pattern pattern = Pattern.compile(regex);
+
+        //stringres.add("OMAR");
         for(int i =0; i<results.size(); i++){
-            Log.d(TAG, String.valueOf(results.get(i)));
-            stringres.add(String.valueOf(results.get(i)));
+            String data= String.valueOf(results.get(i));
+            Log.d(TAG, data);
+
+            Matcher matcher = pattern.matcher(data);
+
+            if(matcher.find()){
+                stringres.add(matcher.group(1));
+                Log.d(TAG, "match find");
+            }else{
+                Log.d(TAG, "No matches");
+                //stringres.add("OMar");
+            }
         }
+
+
         Log.d(TAG,"over");
         Log.d(TAG, String.valueOf(results.size()));
 
@@ -61,7 +80,6 @@ public class DisplayWiFiListActivity extends AppCompatActivity {
                 if (success){
                     Log.d(TAG, "success ");
                     scanSuccess();
-
                 }else {
                     Log.d(TAG, "failure");
                 }
