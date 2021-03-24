@@ -14,12 +14,16 @@ import android.util.Log;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    HotSpotTurnOn hotSpotTurnOn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        hotSpotTurnOn = new HotSpotTurnOn(this);
+
+         //hotSpotTurnOn.showWritePremissionSettings(true);
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        hotSpotTurnOn.showWritePremissionSettings(true);
     }
     
     public static final String EXTRA_MESSAGE =
@@ -80,6 +84,18 @@ public class MainActivity extends AppCompatActivity {
         Intent intent =
             new Intent(MainActivity.this, DisplayWiFiListActivity.class);
         startActivity(intent);
+    }
+
+    public void hotSpotHandler(View view){
+       // HotSpotTurnOn hotSpotTurnOn = new HotSpotTurnOn(this);
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+         //       hotSpotTurnOn.showWritePremissionSettings(true);
+                hotSpotTurnOn.setWifiApEnabled(hotSpotTurnOn.getWifiApConfiguration(),true);
+            }
+        });
+        thread.start();
     }
     
     

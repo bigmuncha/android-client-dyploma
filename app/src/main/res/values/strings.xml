@@ -3,5 +3,6 @@
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
     <string name="button_receive">Recv</string>
-    <string name="button_wifilist">Show Wi-Fi</string>
+    <string name="button_wifi_list">Show Wi-Fi</string>
+    <string name="button_hot_spot">Hot Spot</string>
 </resources>
