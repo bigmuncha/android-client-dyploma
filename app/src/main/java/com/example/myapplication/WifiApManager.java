@@ -29,7 +29,7 @@ public class WifiApManager {
         mWifiManager = (WifiManager) this.context.getSystemService(context.WIFI_SERVICE);
     }
 
-    public void showWritePremissionSettings(boolean force) {
+    public void showWritePermissionSettings(boolean force) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.System.canWrite(this.context)) {
                 Toast.makeText(context, "Get me permission", Toast.LENGTH_LONG).show();
@@ -57,6 +57,19 @@ public class WifiApManager {
         }
     }
 
+    public void turnOnHotSpotOnAllSdkVersion(){
+        if(Build.VERSION_CODES.O > Build.VERSION.SDK_INT) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    setWifiApEnabled(getWifiApConfiguration(), true);
+                }
+            });
+            thread.start();
+        }else{
+            turnOnHotSpot();
+        }
+    }
     public boolean isLocationPermissionEnable() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);

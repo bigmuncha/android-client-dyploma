@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        wifiApManager.showWritePremissionSettings(true);
+        wifiApManager.showWritePermissionSettings(true);
 
     }
     
@@ -92,18 +92,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void hotSpotHandler(View view){
-
-        if(Build.VERSION_CODES.O > Build.VERSION.SDK_INT) {
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    wifiApManager.setWifiApEnabled(wifiApManager.getWifiApConfiguration(), true);
-                }
-            });
-            thread.start();
-        }else{
-            wifiApManager.turnOnHotSpot();
-        }
+        wifiApManager.turnOnHotSpotOnAllSdkVersion();
     }
     
     
