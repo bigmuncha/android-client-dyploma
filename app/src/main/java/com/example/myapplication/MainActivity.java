@@ -4,26 +4,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.content.Intent;
 import java.net.*;
 import java.io.*;
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
-    HotSpotTurnOn hotSpotTurnOn;
+    WifiApManager wifiApManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        hotSpotTurnOn = new HotSpotTurnOn(this);
+        wifiApManager = new WifiApManager(this);
 
-         //hotSpotTurnOn.showWritePremissionSettings(true);
+        if(Build.VERSION_CODES.O <= Build.VERSION.SDK_INT){
+            Toast.makeText(this,"Oreo", Toast.LENGTH_LONG).show();
+        }
+
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        hotSpotTurnOn.showWritePremissionSettings(true);
+        wifiApManager.showWritePremissionSettings(true);
+
     }
     
     public static final String EXTRA_MESSAGE =
@@ -87,15 +92,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void hotSpotHandler(View view){
-       // HotSpotTurnOn hotSpotTurnOn = new HotSpotTurnOn(this);
-        Thread thread = new Thread(new Runnable(){
-            @Override
-            public void run(){
-         //       hotSpotTurnOn.showWritePremissionSettings(true);
-                hotSpotTurnOn.setWifiApEnabled(hotSpotTurnOn.getWifiApConfiguration(),true);
-            }
-        });
-        thread.start();
+
+        if(Build.VERSION_CODES.O > Build.VERSION.SDK_INT) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    wifiApManager.setWifiApEnabled(wifiApManager.getWifiApConfiguration(), true);
+                }
+            });
+            thread.start();
+        }else{
+            wifiApManager.turnOnHotSpot();
+        }
     }
     
     
