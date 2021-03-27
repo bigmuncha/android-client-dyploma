@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.content.Intent;
 import java.net.*;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     WifiApManager wifiApManager;
+    private String TAG = "MAIN";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,13 +28,19 @@ public class MainActivity extends AppCompatActivity {
 
         if(Build.VERSION_CODES.O <= Build.VERSION.SDK_INT){
             Toast.makeText(this,"Oreo", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this,"Not Oreo", Toast.LENGTH_LONG).show();
         }
 
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        wifiApManager.showWritePermissionSettings(true);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 1);
 
+        wifiApManager.showWritePermissionSettings(true);
+        //FolderCreator.create();
     }
-    
+    public void Folder(View view){
+       FolderCreator.create(this);
+    }
     public static final String EXTRA_MESSAGE =
         "com.example.myfirstapp.MESSAGE";
     private String messageFromServer = "MEssage ";
@@ -92,9 +102,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void hotSpotHandler(View view){
+        //wifiApManager.configureHotspot("OMar");
         wifiApManager.turnOnHotSpotOnAllSdkVersion();
+        WifiConfiguration temp = wifiApManager.getWifiApConfiguration();
+        //Log.d("MAIN", temp.SSID);
     }
-    
-    
+
 
 }

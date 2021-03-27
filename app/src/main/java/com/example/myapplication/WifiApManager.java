@@ -9,6 +9,7 @@ import android.net.wifi.*;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -58,6 +59,7 @@ public class WifiApManager {
     }
 
     public void turnOnHotSpotOnAllSdkVersion(){
+
         if(Build.VERSION_CODES.O > Build.VERSION.SDK_INT) {
             Thread thread = new Thread(new Runnable() {
                 @Override
@@ -95,12 +97,14 @@ public class WifiApManager {
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
+
             mWifiManager.startLocalOnlyHotspot(new WifiManager.LocalOnlyHotspotCallback() {
 
                 @Override
                 public void onStarted(WifiManager.LocalOnlyHotspotReservation reservation) {
                     super.onStarted(reservation);
                     mReservation = reservation;
+
                     isHotspotEnabled = true;
                 }
 
@@ -159,6 +163,50 @@ public class WifiApManager {
             Log.e(this.getClass().toString(), "", e);
             return false;
         }
+    }
+    public boolean configureHotspot(String name){
+        WifiConfiguration configuration = getCustomConfigs(name);
+        return configure(configuration);
+    }
+    private  boolean configure(WifiConfiguration wifiConfiguration){
+        try{
+            Method setConfigMethod = mWifiManager.getClass().getMethod("setWifiApConfiguration",
+                    WifiConfiguration.class);
+            boolean status = (boolean) setConfigMethod.invoke(mWifiManager,wifiConfiguration);
+            return status;
+        } catch (IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private WifiConfiguration getCustomConfigs(String ssid){
+        WifiConfiguration wifiConfig = null;
+        try {
+            Method getConfigMethod = mWifiManager.getClass().getMethod("getWifiApConfiguration");
+            wifiConfig = (WifiConfiguration) getConfigMethod.invoke(mWifiManager);
+            if (!TextUtils.isEmpty(ssid))
+                wifiConfig.SSID = ssid;
+            wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            return wifiConfig;
+        } catch (IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (wifiConfig == null) {
+            wifiConfig = new WifiConfiguration();
+            if (!TextUtils.isEmpty(ssid))
+                wifiConfig.SSID = ssid;
+
+
+            wifiConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
+//            wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+  //          wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+            wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        }
+        return wifiConfig;
     }
 
 }

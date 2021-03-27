@@ -106,6 +106,7 @@ public class DisplayWiFiListActivity extends AppCompatActivity implements MyAdap
     public void onItemClick(View view, int position) {
         Log.d(TAG, "Click");
         Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Click");
+        WifiConnect connection = new WifiConnect(this);
+        connection.ConnectToSpecificNetwork(adapter.getItem(position),"123456789");
     }
 }
