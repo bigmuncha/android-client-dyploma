@@ -1,9 +1,12 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -20,6 +23,8 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     WifiApManager wifiApManager;
     private String TAG = "MAIN";
+    private static final  int STORAGE_PERMISSION_CODE = 101;
+    private static final  int FINE_LOCATION_PERMISSION_CODE = 102;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,15 +37,14 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this,"Not Oreo", Toast.LENGTH_LONG).show();
         }
 
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION
+        ,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         wifiApManager.showWritePermissionSettings(true);
-        //FolderCreator.create();
+
+        FolderCreator.create(this,"OmarAppFolder");
     }
-    public void Folder(View view){
-       FolderCreator.create(this);
-    }
+
     public static final String EXTRA_MESSAGE =
         "com.example.myfirstapp.MESSAGE";
     private String messageFromServer = "MEssage ";
@@ -109,4 +113,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void checkPermission(String permission, int requestCode){
+        if(ContextCompat.checkSelfPermission(MainActivity.this,permission)
+                == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{permission},
+                    requestCode);
+        }else {
+            Toast.makeText(MainActivity.this,"Permission already granted",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode ==STORAGE_PERMISSION_CODE){
+            if(grantResults.length >0
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(MainActivity.this,
+                        "Storage permission granted", Toast.LENGTH_SHORT)
+                        .show();
+            }else {
+                Toast.makeText(MainActivity.this,
+                        "Storage permission denied", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        } else if (requestCode ==FINE_LOCATION_PERMISSION_CODE){
+            if(grantResults.length >0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(MainActivity.this,
+                        " Fine location permission granted", Toast.LENGTH_SHORT)
+                        .show();
+            }else {
+                Toast.makeText(MainActivity.this,
+                        "Fine location permission denied", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
 }
