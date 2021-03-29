@@ -9,9 +9,10 @@ import java.io.File;
 
 public class FolderCreator {
     private static final String TAG = "FolderCreator";
+    private static String Name;
     public static  boolean create(Context context,String Name) {
-
-        File folder = new File(Environment.getExternalStorageDirectory() + "/" + Name);
+        String path = Environment.getExternalStorageDirectory() + "/" + Name;
+        File folder = new File(path);
         boolean success = true;
         if(!folder.exists()){
             success=folder.mkdirs();
@@ -25,5 +26,8 @@ public class FolderCreator {
             Log.d(TAG,"failure");
             return  false;
         }
+    }
+    public static String getAbsolutePathToFolder(String Name){
+        return  Environment.getExternalStorageDirectory() + "/" + Name;
     }
 }

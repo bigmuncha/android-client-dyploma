@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private String TAG = "MAIN";
     private static final  int STORAGE_PERMISSION_CODE = 101;
     private static final  int FINE_LOCATION_PERMISSION_CODE = 102;
+    private static  final String FolderName = "OmarAppFolder";
+    private String AbsolutePath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,66 +40,28 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this,"Not Oreo", Toast.LENGTH_LONG).show();
         }
 
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION
-        ,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION
+                        ,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         wifiApManager.showWritePermissionSettings(true);
 
-        FolderCreator.create(this,"OmarAppFolder");
+        FolderCreator.create(this,FolderName);
+        AbsolutePath = FolderCreator.getAbsolutePathToFolder(FolderName);
     }
 
     public static final String EXTRA_MESSAGE =
         "com.example.myfirstapp.MESSAGE";
     private String messageFromServer = "MEssage ";
 
-    public void sendMessage (View view) {
+    public void sendMessage (View view) throws IOException {
+        FileTransfer.SendOneFile("192.168.43.133",9999,"/storage/emulated/0/omar.txt");
 
-        Log.d("SEND","s");
-        Sender("OMAR EBAT");
     }
     public void recvMessage (View view){
-        Log.d("RECV", "r");
-        Thread thread = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                try{
-                    ServerSocket socket = new ServerSocket(6666);
-                    Socket s = socket.accept();
-                    Log.d("TYT", "ss");
-                     BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                    String word = in.readLine();
-                    Log.d("Message from server: ", word);
-                    messageFromServer = word;
-                    in.close();
-                    s.close();
-                    Intent intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
-                    intent.putExtra(EXTRA_MESSAGE, messageFromServer);
-                    startActivity(intent);
-                }catch (Exception e) { e.printStackTrace();}
 
-            }
-        });
-        thread.start();
     }
-    private void Sender(final String msg){
-        Thread thread = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                try{
-                    Socket s = new Socket("192.168.43.1", 6666);
-                    Log.d("TYT", "ss");
-                    OutputStream out = s.getOutputStream();
-                    PrintWriter output = new PrintWriter(out);
-                    output.println(msg);
-                    output.flush();
-                    output.close();
-                    out.close();
-                    s.close();
-                }catch (Exception e) { e.printStackTrace();}
-            }
-        });
-        thread.start();
-    }
+
 
     public void showWiFi(View view){
         Log.d("PIDOR", "ZDES");
@@ -109,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         //wifiApManager.configureHotspot("OMar");
         wifiApManager.turnOnHotSpotOnAllSdkVersion();
         WifiConfiguration temp = wifiApManager.getWifiApConfiguration();
+        Intent intent = new Intent(MainActivity.this, ImageList.class);
+        startActivity(intent);
         //Log.d("MAIN", temp.SSID);
     }
 
