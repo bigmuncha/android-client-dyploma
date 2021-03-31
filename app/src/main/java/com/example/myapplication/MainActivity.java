@@ -6,19 +6,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.content.Intent;
-import java.net.*;
+
 import java.io.*;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.myapplication.wifi.WifiApManager;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -74,8 +73,10 @@ public class MainActivity extends AppCompatActivity {
         //wifiApManager.configureHotspot("OMar");
         wifiApManager.turnOnHotSpotOnAllSdkVersion();
         WifiConfiguration temp = wifiApManager.getWifiApConfiguration();
-        Intent intent = new Intent(MainActivity.this, ImageList.class);
+
+        Intent intent = new Intent(MainActivity.this,PictureListActivity.class);
         startActivity(intent);
+
         //Log.d("MAIN", temp.SSID);
     }
 

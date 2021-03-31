@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.wifi;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -11,7 +11,7 @@ public class WifiConnect {
     private WifiConfiguration wifiConfiguration;
     private WifiManager wifiManager;
     private Context context;
-    WifiConnect(Context context){
+    public WifiConnect(Context context){
         this.context = context;
         wifiConfiguration = new WifiConfiguration();
         wifiManager = (WifiManager) this.context.getSystemService(this.context.WIFI_SERVICE);

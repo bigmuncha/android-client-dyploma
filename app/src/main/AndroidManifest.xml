@@ -23,7 +23,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".ImageList"></activity>
         <activity android:name=".DisplayWiFiListActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -32,6 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".PictureListActivity"></activity>
     </application>
 
 </manifest>
