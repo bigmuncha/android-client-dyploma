@@ -2,9 +2,6 @@ package com.example.myapplication.filemanager;
 
 import android.content.Context;
 
-import com.example.myapplication.PictureItem;
-import com.example.myapplication.PictureLab;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,9 +13,9 @@ public class FileLab {
     private static final String TAG = "FILE_LAB";
     private List<FileItem> mFiles;
 
-    public FileLab(Context context) throws IOException {
+    public FileLab(Context context,String newDir) throws IOException {
         mFiles = new ArrayList<>();
-        File folder = new File(rootPath);
+        File folder = new File( newDir);
         File []listOfFiles = folder.listFiles();
 
         for (int i = 0; i < listOfFiles.length; i++) {
@@ -27,14 +24,19 @@ public class FileLab {
         }
     }
 
-    public static FileLab get(Context context) {
-        if(sFileLab == null){
+    public FileLab getReloadFileLab(Context context, String path) throws IOException {
+        sFileLab = new FileLab(context,path);
+        return sFileLab;
+    }
+
+    public static FileLab get(Context context,String path) {
+       // if(sFileLab == null){
             try {
-                sFileLab = new FileLab(context);
+                sFileLab = new FileLab(context,path);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        //}
         return sFileLab;
     }
 

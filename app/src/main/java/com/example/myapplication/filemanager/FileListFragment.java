@@ -1,12 +1,15 @@
 package com.example.myapplication.filemanager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.PictureItem;
 import com.example.myapplication.R;
 
 import java.util.List;
@@ -22,6 +24,30 @@ import java.util.List;
 public class FileListFragment extends Fragment {
     private RecyclerView mFileRecyclerView;
     private FileAdapter mAdapter;
+    private static final String rootDir = "/storage/emulated/0";
+    private String currentDir;
+
+    private static final String ARG_FOLDER_PATH = "folder_path";
+
+
+    public static FileListFragment newInstance(String path){
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_FOLDER_PATH,path);
+
+        FileListFragment fragment = new FileListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        String dir = (String) getArguments().getSerializable(ARG_FOLDER_PATH);
+        currentDir = dir;
+        Log.d("Create",currentDir);
+    }
+
+
 
     @Nullable
     @Override
@@ -31,18 +57,18 @@ public class FileListFragment extends Fragment {
         mFileRecyclerView = view.findViewById(R.id.picture_recycler_view);
         mFileRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        updateUI();
+        updateUI(currentDir);
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateUI();
+        updateUI(currentDir);
     }
 
-    private void updateUI() {
-        FileLab fileLab = FileLab.get(getActivity());
+    private void updateUI(String path) {
+        FileLab fileLab = FileLab.get(getActivity(),currentDir);
         List<FileItem> files = fileLab.getFiles();
 
         if(mAdapter == null){
@@ -110,7 +136,13 @@ public class FileListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-
+            if (mFileItem.isIsFolder()) {
+                Intent intent = FileListActivity.newIntent(getActivity(), mFileItem.getPath());
+                Log.d("CLICK", mFileItem.getPath());
+                startActivity(intent);
+            }else{
+                Toast.makeText(getContext(), "Its file", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
