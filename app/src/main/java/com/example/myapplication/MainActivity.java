@@ -18,6 +18,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.myapplication.filemanager.FileItem;
+import com.example.myapplication.filemanager.FileListActivity;
 import com.example.myapplication.wifi.WifiApManager;
 
 
@@ -55,7 +56,11 @@ public class MainActivity extends AppCompatActivity {
     private String messageFromServer = "MEssage ";
 
     public void sendMessage (View view) throws IOException {
-        FileTransfer.SendOneFile("192.168.43.133",9999,"/storage/emulated/0/omar.txt");
+
+        Intent intent = new Intent(MainActivity.this, FileListActivity.class);
+        startActivity(intent);
+
+        //FileTransfer.SendOneFile("192.168.43.133",9999,"/storage/emulated/0/omar.txt");
 
     }
     public void recvMessage (View view){
@@ -72,17 +77,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void hotSpotHandler(View view){
         //wifiApManager.configureHotspot("OMar");
-        wifiApManager.turnOnHotSpotOnAllSdkVersion();
-        WifiConfiguration temp = wifiApManager.getWifiApConfiguration();
+       // wifiApManager.turnOnHotSpotOnAllSdkVersion();
+        //WifiConfiguration temp = wifiApManager.getWifiApConfiguration();
 
-        Intent intent = new Intent(MainActivity.this,PictureListActivity.class);
-        startActivity(intent);
 
-        FileItem fileitem = new FileItem("/storage/emulated/0/DCIM/Camera");
-        Log.d(TAG,fileitem.getName());
-        Log.d(TAG,fileitem.getPath());
-        Log.d(TAG, String.valueOf(fileitem.isIsFolder()));
-        Log.d(TAG,fileitem.getExtension());
+
+
 
         //Log.d("MAIN", temp.SSID);
     }
