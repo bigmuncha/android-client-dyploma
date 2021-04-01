@@ -1,13 +1,11 @@
 package com.example.myapplication;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.FileNotFoundException;
 import java.util.List;
+
+import static com.example.myapplication.R.drawable.ic_folder;
 
 public class PictureListFragment extends Fragment {
 
@@ -71,7 +72,11 @@ public class PictureListFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull PictureHolder holder, int position) {
             PictureItem picture = mPictures.get(position);
-            holder.bind(picture);
+            try {
+                holder.bind(picture);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -100,10 +105,10 @@ public class PictureListFragment extends Fragment {
             itemView.setOnClickListener(this);
         }
 
-        public void bind(PictureItem pictureItem){
+        public void bind(PictureItem pictureItem) throws FileNotFoundException {
             mPicture = pictureItem;
             //меняй
-            //mPictureImageView.setImageDrawable(Drawable.createFromPath(mPicture.getPath()));
+            mPictureImageView.setImageResource(ic_folder);
             mDateTextView.setText(mPicture.getPath());
         }
 

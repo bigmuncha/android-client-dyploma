@@ -17,6 +17,7 @@ import java.io.*;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.myapplication.filemanager.FileItem;
 import com.example.myapplication.wifi.WifiApManager;
 
 
@@ -76,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MainActivity.this,PictureListActivity.class);
         startActivity(intent);
+
+        FileItem fileitem = new FileItem("/storage/emulated/0/DCIM/Camera");
+        Log.d(TAG,fileitem.getName());
+        Log.d(TAG,fileitem.getPath());
+        Log.d(TAG, String.valueOf(fileitem.isIsFolder()));
+        Log.d(TAG,fileitem.getExtension());
 
         //Log.d("MAIN", temp.SSID);
     }
