@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.Date;
 
 public class FileItem {
@@ -24,13 +25,14 @@ public class FileItem {
 
 
     public FileItem(String path) {
-
+        File f = new File(path);
         mPath = path;
         mName = extractName(path);
-        mIsFolder = isFolder(path);
+        mIsFolder = f.isDirectory();
         mExtension = extractExtension(mName);
-        mDate = String.valueOf(new Date());
+        mDate = recognizeDate(f);
        // mDate = Files.readAttributes(Paths.get(path),BasicFileAttributes.class).creationTime().toString();
+        f=null;
     }
 
     public static String extractExtension(String name) {
@@ -41,10 +43,12 @@ public class FileItem {
         return "";
     }
 
-    public static boolean isFolder(String path){
-        File f = new File(path);
-        return f.isDirectory();
+    public static String recognizeDate(File file){
+        Date lastModDate = new Date( file.lastModified());
+        return String.valueOf(lastModDate);
     }
+
+
 
 
     public static String extractName(String path) {

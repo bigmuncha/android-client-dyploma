@@ -19,14 +19,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileListFragment extends Fragment {
     private RecyclerView mFileRecyclerView;
     private FileAdapter mAdapter;
     private static final String rootDir = "/storage/emulated/0";
-    private String currentDir;
-
+    private String mCurrentDir;
+    private List<FileItem> mFileStack;
     private static final String ARG_FOLDER_PATH = "folder_path";
 
 
@@ -41,10 +42,11 @@ public class FileListFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState){
+        mFileStack = new ArrayList<>();
         super.onCreate(savedInstanceState);
         String dir = (String) getArguments().getSerializable(ARG_FOLDER_PATH);
-        currentDir = dir;
-        Log.d("Create",currentDir);
+        mCurrentDir = dir;
+        Log.d("Create", mCurrentDir);
     }
 
 
@@ -57,18 +59,18 @@ public class FileListFragment extends Fragment {
         mFileRecyclerView = view.findViewById(R.id.picture_recycler_view);
         mFileRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        updateUI(currentDir);
+        updateUI(mCurrentDir);
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateUI(currentDir);
+        updateUI(mCurrentDir);
     }
 
     private void updateUI(String path) {
-        FileLab fileLab = FileLab.get(getActivity(),currentDir);
+        FileLab fileLab = FileLab.get(getActivity(), mCurrentDir);
         List<FileItem> files = fileLab.getFiles();
 
         if(mAdapter == null){
@@ -105,7 +107,7 @@ public class FileListFragment extends Fragment {
         }
     }
 
-    private class FileHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class FileHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
 
         private ImageView mFileIconImageView;
         private TextView mNameTextView;
@@ -142,7 +144,16 @@ public class FileListFragment extends Fragment {
                 startActivity(intent);
             }else{
                 Toast.makeText(getContext(), "Its file", Toast.LENGTH_SHORT).show();
+                mSelectFileCheckBox.setChecked(true);
+                mFileStack.add(mFileItem);
             }
+        }
+        public List<FileItem> getStackFiles(){
+            return mFileStack;
+        }
+        @Override
+        public boolean onLongClick(View v) {
+            return true;
         }
     }
 }
