@@ -22,7 +22,9 @@ public class FileItem {
     private boolean mIsFolder;
     private  String mExtension;
 
-
+    public  String createRequest(){
+        return mName + "/" + mExtension;
+    }
 
     public FileItem(String path) {
         File f = new File(path);

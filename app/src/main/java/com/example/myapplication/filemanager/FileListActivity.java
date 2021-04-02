@@ -17,7 +17,6 @@ public class FileListActivity extends AppCompatActivity {
 
 
     private static final String rootDir = "/storage/emulated/0";
-
     private static final String EXTRA_FILE_PATH =
             "com.example.myapplication.filemanager.folder_path";
     public static Intent newIntent(Context packageContext, String path){
@@ -50,5 +49,6 @@ public class FileListActivity extends AppCompatActivity {
     }
 
     public void SendFiles(View view) {
+
     }
 }

@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
         wifiApManager.showWritePermissionSettings(true);
 
-        FolderCreator.create(this,FolderName);
-        AbsolutePath = FolderCreator.getAbsolutePathToFolder(FolderName);
+        FolderCreator.create(this,FileTransfer.storageDirectory);
+        AbsolutePath = FolderCreator.getAbsolutePathToFolder(FileTransfer.storageDirectory);
     }
 
     public static final String EXTRA_MESSAGE =

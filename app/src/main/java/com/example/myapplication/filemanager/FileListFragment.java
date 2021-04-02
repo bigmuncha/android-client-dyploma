@@ -17,18 +17,23 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.FileTransfer;
 import com.example.myapplication.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class FileListFragment extends Fragment {
     private RecyclerView mFileRecyclerView;
     private FileAdapter mAdapter;
     private static final String rootDir = "/storage/emulated/0";
     private String mCurrentDir;
-    private List<FileItem> mFileStack;
+
+    private     Stack<FileItem> mFileStack;
     private static final String ARG_FOLDER_PATH = "folder_path";
+
 
 
     public static FileListFragment newInstance(String path){
@@ -42,7 +47,7 @@ public class FileListFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState){
-        mFileStack = new ArrayList<>();
+        mFileStack = new Stack<>();
         super.onCreate(savedInstanceState);
         String dir = (String) getArguments().getSerializable(ARG_FOLDER_PATH);
         mCurrentDir = dir;
@@ -107,7 +112,7 @@ public class FileListFragment extends Fragment {
         }
     }
 
-    private class FileHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
+    private class FileHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView mFileIconImageView;
         private TextView mNameTextView;
@@ -143,17 +148,21 @@ public class FileListFragment extends Fragment {
                 Log.d("CLICK", mFileItem.getPath());
                 startActivity(intent);
             }else{
-                Toast.makeText(getContext(), "Its file", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Its file " + mFileItem.getExtension(), Toast.LENGTH_SHORT).show();
+                Log.d("File","FILE" + mFileItem.getName());
                 mSelectFileCheckBox.setChecked(true);
-                mFileStack.add(mFileItem);
+                mFileStack.push(mFileItem);
+
+                try {
+                    FileTransfer.SendOneFile("192.168.43.133",FileTransfer.getTransferPort(),mFileStack.pop());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         public List<FileItem> getStackFiles(){
             return mFileStack;
         }
-        @Override
-        public boolean onLongClick(View v) {
-            return true;
-        }
+
     }
 }
