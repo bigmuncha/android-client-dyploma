@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.StandardCopyOption;
 
 public class FileTransfer {
-    private static int bufsize = 8192;
+    private static int bufsize = 131072;
     private static final String TAG = "Transfer";
     private static int TRANSFER_PORT = 9999;
     public static final String storageDirectory = "/storage/emulated/0/OmarApplication";
@@ -82,14 +82,11 @@ public class FileTransfer {
 
     private static void sendFile(FileItem fileItem,final  BufferedOutputStream outStreamSocket,int bufsize) throws IOException {
         int count;
-        String fileName = fileItem.getName();
+        String fileName = fileItem.getExtension();
         byte[]bytes;
+        bytes = fileName.getBytes();
 
-
-        PrintWriter nameout = new PrintWriter(outStreamSocket);
-        nameout.print(fileName);
-        nameout.flush();
-        nameout.close();
+        outStreamSocket.write(bytes,0,bytes.length);
 
         bytes = new byte[bufsize];
         final BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(fileItem.getPath()));
@@ -106,7 +103,6 @@ public class FileTransfer {
             if(bytes[i] == 0){
                 break;
             }
-
             names = names + (char)bytes[i];
         }
         return  names;

@@ -49,6 +49,7 @@ public class FileListActivity extends AppCompatActivity {
     }
 
     public void SendFiles(View view) {
-
+        FileContainer fileContainer = FileContainer.get(getApplicationContext());
+        fileContainer.printer();
     }
 }

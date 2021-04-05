@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,11 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.FileTransfer;
 import com.example.myapplication.R;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -130,14 +128,43 @@ public class FileListFragment extends Fragment {
         }
 
         public void bind(FileItem fileItem){
+            FileContainer fileContainer = FileContainer.get(getContext());
+
             mFileItem = fileItem;
             mNameTextView.setText(mFileItem.getName());
             mDateTextView.setText(mFileItem.getDate());
+
+            mSelectFileCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        fileContainer.setFile(mFileItem.getPath(),mFileItem);
+                    }else {
+                        fileContainer.removeFile(mFileItem.getPath());
+                    }
+                }
+            });
+
+            mFileIconImageView.setImageResource(makeIcon(mFileItem));
+
+            if(fileContainer.isInclude(mFileItem.getPath())){
+                if(!mSelectFileCheckBox.isChecked()) {
+                    mSelectFileCheckBox.setChecked(true);
+                }
+            }
+        }
+
+        private int makeIcon(FileItem mFileItem) {
             if(mFileItem.isIsFolder()){
-                mFileIconImageView.setImageResource(R.drawable.ic_folder);
+                return R.drawable.ic_folder;
+            }else if(mFileItem.getExtension().equals("jpg")|| mFileItem.getExtension().equals( "png")){
+                return R.drawable.ic_image;
+            }else if(mFileItem.getExtension().equals("mp4")){
+                return R.drawable.ic_video;
+            }else if(mFileItem.getExtension().equals("mp3")){
+                return R.drawable.ic_audio;
             }else{
-                /*change this*/
-                mFileIconImageView.setImageResource(R.drawable.ic_file);
+                return R.drawable.ic_file;
             }
         }
 
@@ -149,7 +176,7 @@ public class FileListFragment extends Fragment {
                 startActivity(intent);
             }else{
                 Toast.makeText(getContext(), "Its file " + mFileItem.getExtension(), Toast.LENGTH_SHORT).show();
-                Log.d("File","FILE" + mFileItem.getName());
+              /*  Log.d("File","FILE" + mFileItem.getName());
                 mSelectFileCheckBox.setChecked(true);
                 mFileStack.push(mFileItem);
 
@@ -158,6 +185,7 @@ public class FileListFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+               */
             }
         }
         public List<FileItem> getStackFiles(){

@@ -17,6 +17,7 @@ import java.io.*;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.myapplication.filemanager.FileContainer;
 import com.example.myapplication.filemanager.FileItem;
 import com.example.myapplication.filemanager.FileListActivity;
 import com.example.myapplication.wifi.WifiApManager;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private static final  int STORAGE_PERMISSION_CODE = 101;
     private static final  int FINE_LOCATION_PERMISSION_CODE = 102;
     private static  final String FolderName = "OmarAppFolder";
+
+
     private String AbsolutePath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         FolderCreator.create(this,FileTransfer.storageDirectory);
         AbsolutePath = FolderCreator.getAbsolutePathToFolder(FileTransfer.storageDirectory);
+
     }
 
     public static final String EXTRA_MESSAGE =

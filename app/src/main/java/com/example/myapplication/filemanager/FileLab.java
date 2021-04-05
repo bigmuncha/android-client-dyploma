@@ -13,7 +13,7 @@ public class FileLab {
     private static final String TAG = "FILE_LAB";
     private List<FileItem> mFiles;
 
-    public FileLab(Context context,String newDir) throws IOException {
+    private FileLab(Context context,String newDir) throws IOException {
         mFiles = new ArrayList<>();
         File folder = new File( newDir);
         File []listOfFiles = folder.listFiles();
@@ -24,7 +24,7 @@ public class FileLab {
         }
     }
 
-    public FileLab getReloadFileLab(Context context, String path) throws IOException {
+    public static FileLab getReloadFileLab(Context context, String path) throws IOException {
         sFileLab = new FileLab(context,path);
         return sFileLab;
     }
