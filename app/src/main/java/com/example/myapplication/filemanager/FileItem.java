@@ -21,6 +21,7 @@ public class FileItem {
     private String mDate;
     private boolean mIsFolder;
     private  String mExtension;
+    private long mSize;
 
     public  String createRequest(){
         return mName + "/" + mExtension;
@@ -28,6 +29,7 @@ public class FileItem {
 
     public FileItem(String path) {
         File f = new File(path);
+        mSize = f.length();
         mPath = path;
         mName = extractName(path);
         mIsFolder = f.isDirectory();
@@ -59,6 +61,9 @@ public class FileItem {
             return path.substring(i+1);
         }
         return null;
+    }
+    public long getSize(){
+        return mSize;
     }
 
     public String getPath() {

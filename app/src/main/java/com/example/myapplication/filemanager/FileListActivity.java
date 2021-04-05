@@ -10,8 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.myapplication.FileTransfer;
 import com.example.myapplication.R;
 import com.example.myapplication.SingleFragmentActivity;
+
+import java.io.File;
 
 public class FileListActivity extends AppCompatActivity {
 
@@ -54,5 +57,6 @@ public class FileListActivity extends AppCompatActivity {
     public void SendFiles(View view) {
         FileContainer fileContainer = FileContainer.get(getApplicationContext());
         fileContainer.printer();
+        FileTransfer.SendMultipleFiles("192.168.43.133",FileTransfer.getTransferPort(), FileContainer.getFiles());
     }
 }

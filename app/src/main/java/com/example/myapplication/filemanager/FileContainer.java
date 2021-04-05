@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class FileContainer {
     private static FileContainer sFileContainer;
-    private HashMap<String , FileItem> mFiles;
+    private static HashMap<String , FileItem> mFiles;
 
     private FileContainer(Context context){
         mFiles = new HashMap<>();
@@ -39,7 +39,7 @@ public class FileContainer {
         return mFiles.containsKey(key);
     }
 
-    public HashMap<String ,FileItem> getFiles() {
+    public static HashMap<String ,FileItem> getFiles() {
         return mFiles;
     }
     
