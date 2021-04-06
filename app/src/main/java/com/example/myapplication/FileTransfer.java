@@ -6,6 +6,7 @@ import com.example.myapplication.filemanager.FileItem;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,7 +45,7 @@ public class FileTransfer {
 
                     final BufferedOutputStream outStream = new BufferedOutputStream(clientSocket.getOutputStream());
                     bytes = longToBytes(mapa.size());
-                    outStream.write(bytes);
+                    outStream.write(bytes,0,bytes.length);
                     outStream.flush();
                     for (FileItem fItem: mapa.values()) {
                         sendFile(fItem,outStream,bufsize);
@@ -160,16 +161,13 @@ public class FileTransfer {
         String fileExtension = fileItem.getExtension();
         long fileSize = fileItem.getSize();
         byte[]bytes;
-        bytes = fileExtension.getBytes();
-        outStreamSocket.write(bytes,0,bytes.length);
 
-        Log.d(TAG,fileExtension);
+        String result_message = fileExtension + "/" + String.valueOf(fileSize);
+        bytes = result_message.getBytes();
 
-        bytes = longToBytes(fileSize);
-        outStreamSocket.flush();
         outStreamSocket.write(bytes,0,bytes.length);
         outStreamSocket.flush();
-        Log.d(TAG, String.valueOf(fileSize));
+        Log.d(TAG, result_message);
 
         bytes = new byte[bufsize];
         final BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(fileItem.getPath()));
