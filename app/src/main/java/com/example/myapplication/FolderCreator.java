@@ -11,7 +11,7 @@ public class FolderCreator {
     private static final String TAG = "FolderCreator";
     private static String Name;
     public static  boolean create(Context context,String Name) {
-        String path = Environment.getExternalStorageDirectory() + "/" + Name;
+        String path = Name;
         File folder = new File(path);
         boolean success = true;
         if(!folder.exists()){

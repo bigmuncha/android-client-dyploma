@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         wifiApManager.showWritePermissionSettings(true);
 
         FolderCreator.create(this,FileTransfer.storageDirectory);
-        AbsolutePath = FolderCreator.getAbsolutePathToFolder(FileTransfer.storageDirectory);
+        //AbsolutePath = FolderCreator.getAbsolutePathToFolder(FileTransfer.storageDirectory);
 
     }
 
@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         //FileTransfer.SendOneFile("192.168.43.133",9999,"/storage/emulated/0/omar.txt");
 
     }
-    public void recvMessage (View view){
-
+    public void recvMessage (View view) throws IOException {
+        FileTransfer.RecvMultipleFiles(FileTransfer.getTransferPort(),FileTransfer.storageDirectory);
     }
 
 

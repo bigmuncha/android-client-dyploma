@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.myapplication.FileTransfer;
 import com.example.myapplication.R;
 import com.example.myapplication.SingleFragmentActivity;
+import com.example.myapplication.wifi.TempFileTransfer;
 
 import java.io.File;
 

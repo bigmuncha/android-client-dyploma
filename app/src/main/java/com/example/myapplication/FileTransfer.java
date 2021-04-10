@@ -2,10 +2,12 @@ package com.example.myapplication;
 
 import android.util.Log;
 
+import com.example.myapplication.container.Pair;
 import com.example.myapplication.filemanager.FileItem;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,8 +28,8 @@ import java.util.UUID;
 public class FileTransfer {
     private static int bufsize = 131072;
     private static final String TAG = "Transfer";
-    private static int TRANSFER_PORT = 9999;
-    public static final String storageDirectory = "/storage/emulated/0/OmarApplication";
+    public static int TRANSFER_PORT = 9999;
+    public static final String storageDirectory = "/storage/emulated/0/OmarAppFolder";
 
     public static int getTransferPort(){
         return TRANSFER_PORT;
@@ -42,16 +44,12 @@ public class FileTransfer {
                     byte[] bytes = new byte[bufsize];
                     Socket clientSocket = new Socket(ip,port);
                     Log.d(TAG,"good Connect");
-
-                    final BufferedOutputStream outStream = new BufferedOutputStream(clientSocket.getOutputStream());
-                    bytes = longToBytes(mapa.size());
-                    outStream.write(bytes,0,bytes.length);
-                    outStream.flush();
+                    DataOutputStream dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
+                    dataOutputStream.writeInt(mapa.size());
+                    dataOutputStream.flush();
                     for (FileItem fItem: mapa.values()) {
-                        sendFile(fItem,outStream,bufsize);
+                        sendFile(fItem,clientSocket,bufsize);
                     }
-                    outStream.flush();
-                    outStream.close();
                     clientSocket.close();
                 }catch (Exception e) { e.printStackTrace();}
             }
@@ -68,23 +66,19 @@ public class FileTransfer {
 
                     ServerSocket serverSocket = new ServerSocket(port);
                     byte[] bytes = new byte[bufsize];
-                    System.out.println("Wait");
+
                     Socket client = serverSocket.accept();
-                    long start = System.currentTimeMillis();
-                    System.out.println("accept normal");
-                    final BufferedInputStream inStream = new BufferedInputStream(client.getInputStream());
 
-                    inStream.read(bytes);
-                    long fileAmount = bytesToLong(bytes);
 
-                    for (int i = 0; i < fileAmount; i++) {
-                        recvFile(inStream,bufsize);
+                    DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
+                    int countFiles = dataInputStream.readInt();
+
+                    for (int i = 0; i < countFiles; i++) {
+                        recvFile(client,bufsize);
                     }
-                    inStream.close();
+
                     client.close();
                     serverSocket.close();
-                    long elapsed = System.currentTimeMillis() - start;
-                    System.out.print(elapsed/1000F);
                 }catch (Exception e) { e.printStackTrace();}
             }
         });
@@ -99,7 +93,7 @@ public class FileTransfer {
                     byte[] bytes = new byte[bufsize];
                     Socket clientSocket = new Socket(ip,port);
                     final BufferedOutputStream outStream = new BufferedOutputStream(clientSocket.getOutputStream());
-                    sendFile(fileItem,outStream,bufsize);
+                    sendFile(fileItem,clientSocket,bufsize);
                     outStream.flush();
                     outStream.close();
                     clientSocket.close();
@@ -119,7 +113,7 @@ public class FileTransfer {
                     byte[] bytes = new byte[bufsize];
                     Socket client = serverSocket.accept();
                     final BufferedInputStream inStream = new BufferedInputStream(client.getInputStream());
-                    recvFile(inStream,bufsize);
+                    recvFile(client,bufsize);
                     inStream.close();
                 }catch (Exception e) { e.printStackTrace();}
             }
@@ -127,55 +121,82 @@ public class FileTransfer {
         thread.start();
     }
 
-    private static void recvFile(final BufferedInputStream inStreamSocket, int bufsize) throws IOException {
-        byte[] bytes = new byte[bufsize];
-        int count;
+    private static void recvFile(Socket socket, int bufsize) throws IOException {
+        long fileSize;
+        String extension;
+        String response;
 
-        count = inStreamSocket.read(bytes);
+        DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+        response = dataInputStream.readUTF();
 
-        String extension = requestParser(bytes);
+        Pair<String, Long> para = getResponse(response);
+        extension = para.getLeft();
+        fileSize = para.getRight();
+        byte[] buffer = new byte[bufsize];
+        int count =0;
+        long sum = 0;
 
-        count = inStreamSocket.read(bytes);
-        long sizeFile = bytesToLong(bytes);
+        String PathToFile = storageDirectory + "/" + UUID.randomUUID().toString() + "." +extension;
+        Log.d(TAG,PathToFile);
 
-        String fileName = storageDirectory + "/" + UUID.randomUUID().toString() + "." + extension;
-        File file = new File(fileName);
-        final BufferedOutputStream outStream;
+        InputStream inputStream = socket.getInputStream();
+        FileOutputStream fileOutputStream = new FileOutputStream(PathToFile);
 
-        int sum=0;
-        outStream = new BufferedOutputStream(new FileOutputStream(file));
-        System.out.println("while");
-        while (sum < sizeFile){
-            count = inStreamSocket.read(bytes);
+        while(sum < fileSize){
+            long temp;
+            if(fileSize - sum > bufsize){
+                temp = bufsize;
+            }else{
+                temp = fileSize - sum;
+            }
+            count = inputStream.read(buffer,0,(int) temp);
             sum+=count;
-            outStream.write(bytes, 0, count);
+            fileOutputStream.write(buffer,0,count);
+            fileOutputStream.flush();
         }
-        outStream.flush();
-        outStream.close();
+        fileOutputStream.close();
+        Log.d(TAG, "complete");
+    }
 
+    private static Pair<String, Long> getResponse(String response) {
+        int i = response.lastIndexOf('/');
+
+
+        String ext = response.substring(0,i);
+
+        Long size = Long.parseLong(response.substring(i+1));
+        //System.out.print(ext + "  "+  size + '\n');
+        Pair<String,Long> pair = new Pair<String,Long>(ext,size);
+        return pair;
 
     }
 
-    private static void sendFile(FileItem fileItem,final  BufferedOutputStream outStreamSocket,int bufsize) throws IOException {
-        int count;
+    private static void sendFile(FileItem fileItem,Socket socket,int bufsize) throws IOException {
+
         String fileExtension = fileItem.getExtension();
         long fileSize = fileItem.getSize();
-        byte[]bytes;
+
+        DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
         String result_message = fileExtension + "/" + String.valueOf(fileSize);
-        bytes = result_message.getBytes();
+        dataOutputStream.writeUTF(result_message);
 
-        outStreamSocket.write(bytes,0,bytes.length);
-        outStreamSocket.flush();
         Log.d(TAG, result_message);
 
-        bytes = new byte[bufsize];
-        final BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(fileItem.getPath()));
-        while((count = inStream.read(bytes)) > 0){
-            outStreamSocket.write(bytes,0,count);
-        }
 
-        inStream.close();
+        FileInputStream fileInputStream = new FileInputStream(fileItem.getPath());
+        OutputStream outputStream = socket.getOutputStream();
+
+        byte[] buffer = new byte[bufsize];
+        int count;
+        int sum =0;
+
+        while ((count = fileInputStream.read(buffer,0,bufsize)) > 0){
+            sum +=count;
+            outputStream.write(buffer,0,count);
+            outputStream.flush();
+        }
+        fileInputStream.close();
     }
 
     public static String requestParser(byte[] bytes){
