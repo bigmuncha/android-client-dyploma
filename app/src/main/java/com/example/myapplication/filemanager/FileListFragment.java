@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -28,7 +29,7 @@ public class FileListFragment extends Fragment {
     private FileAdapter mAdapter;
     private static final String rootDir = "/storage/emulated/0";
     private String mCurrentDir;
-
+    Button button;
     private     Stack<FileItem> mFileStack;
     private static final String ARG_FOLDER_PATH = "folder_path";
 
@@ -50,6 +51,7 @@ public class FileListFragment extends Fragment {
         String dir = (String) getArguments().getSerializable(ARG_FOLDER_PATH);
         mCurrentDir = dir;
         Log.d("Create", mCurrentDir);
+
     }
 
 
@@ -62,9 +64,12 @@ public class FileListFragment extends Fragment {
         mFileRecyclerView = view.findViewById(R.id.picture_recycler_view);
         mFileRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+
         updateUI(mCurrentDir);
         return view;
     }
+
+   
 
     @Override
     public void onResume() {
@@ -133,13 +138,20 @@ public class FileListFragment extends Fragment {
             mFileItem = fileItem;
             mNameTextView.setText(mFileItem.getName());
             mDateTextView.setText(mFileItem.getDate());
+            mSelectFileCheckBox.setChecked(false);
 
+            if(button == null){
+                Log.d("NUL", "NUL");
+            }
+            //int countFile = Integer.parseInt((String) button.getText());
             mSelectFileCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked){
+                      //  button.setText(String.valueOf(countFile + 1));
                         fileContainer.setFile(mFileItem.getPath(),mFileItem);
                     }else {
+                        //button.setText(String.valueOf(countFile - 1));
                         fileContainer.removeFile(mFileItem.getPath());
                     }
                 }
@@ -151,6 +163,7 @@ public class FileListFragment extends Fragment {
                 if(!mSelectFileCheckBox.isChecked()) {
                     mSelectFileCheckBox.setChecked(true);
                 }
+                Log.d("CHECKER", mFileItem.getPath());
             }
         }
 

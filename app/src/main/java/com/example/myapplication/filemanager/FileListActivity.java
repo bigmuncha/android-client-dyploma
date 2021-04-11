@@ -33,7 +33,7 @@ public class FileListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
-
+        
         String folderPath = (String) getIntent().getSerializableExtra(EXTRA_FILE_PATH);
         Log.d("Activity", folderPath + "  ");
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -56,6 +56,7 @@ public class FileListActivity extends AppCompatActivity {
     }
 
     public void SendFiles(View view) {
+
         FileContainer fileContainer = FileContainer.get(getApplicationContext());
         fileContainer.printer();
         FileTransfer.SendMultipleFiles("192.168.43.133",FileTransfer.getTransferPort(), FileContainer.getFiles());
