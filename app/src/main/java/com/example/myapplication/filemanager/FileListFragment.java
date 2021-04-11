@@ -1,5 +1,6 @@
 package com.example.myapplication.filemanager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,6 +50,7 @@ public class FileListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState){
         mFileStack = new Stack<>();
         super.onCreate(savedInstanceState);
+
         String dir = (String) getArguments().getSerializable(ARG_FOLDER_PATH);
         mCurrentDir = dir;
         Log.d("Create", mCurrentDir);
@@ -68,8 +71,6 @@ public class FileListFragment extends Fragment {
         updateUI(mCurrentDir);
         return view;
     }
-
-   
 
     @Override
     public void onResume() {
@@ -140,10 +141,8 @@ public class FileListFragment extends Fragment {
             mDateTextView.setText(mFileItem.getDate());
             mSelectFileCheckBox.setChecked(false);
 
-            if(button == null){
-                Log.d("NUL", "NUL");
-            }
-            //int countFile = Integer.parseInt((String) button.getText());
+
+
             mSelectFileCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

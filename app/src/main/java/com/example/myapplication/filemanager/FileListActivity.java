@@ -9,16 +9,19 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.FileTransfer;
 import com.example.myapplication.R;
 import com.example.myapplication.SingleFragmentActivity;
+import com.example.myapplication.container.SharedViewModel;
 import com.example.myapplication.wifi.TempFileTransfer;
 
 import java.io.File;
 
 public class FileListActivity extends AppCompatActivity {
 
+    private SharedViewModel viewModel;
 
     private static final String rootDir = "/storage/emulated/0";
     private static final String EXTRA_FILE_PATH =
@@ -33,11 +36,12 @@ public class FileListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
-        
+        viewModel = new ViewModelProvider(this).get(SharedViewModel.class);
         String folderPath = (String) getIntent().getSerializableExtra(EXTRA_FILE_PATH);
         Log.d("Activity", folderPath + "  ");
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
+        Fragment fragment1 = fragmentManager.findFragmentById(R.id.send_bar_container);
 
         if(fragment == null){
             if(folderPath == null) {
@@ -50,15 +54,18 @@ public class FileListActivity extends AppCompatActivity {
                     .commit();
         }
 
-
-
+        if(fragment1 == null){
+           fragment1 = FileSendBarFragment.newInstance();
+            fragmentManager.beginTransaction()
+                    .add(R.id.send_bar_container,fragment1)
+                    .commit();
+        }
 
     }
 
-    public void SendFiles(View view) {
+    public void SendFiles(View view){
 
-        FileContainer fileContainer = FileContainer.get(getApplicationContext());
-        fileContainer.printer();
-        FileTransfer.SendMultipleFiles("192.168.43.133",FileTransfer.getTransferPort(), FileContainer.getFiles());
     }
+
+
 }
