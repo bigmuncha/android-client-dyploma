@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.net.wifi.WifiConfiguration;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -17,9 +16,8 @@ import java.io.*;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.myapplication.filemanager.FileContainer;
-import com.example.myapplication.filemanager.FileItem;
 import com.example.myapplication.filemanager.FileListActivity;
+import com.example.myapplication.wifi.DisplayWiFiListActivity;
 import com.example.myapplication.wifi.WifiApManager;
 
 

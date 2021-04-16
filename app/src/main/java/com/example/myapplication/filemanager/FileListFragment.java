@@ -163,7 +163,7 @@ public class FileListFragment extends Fragment {
                         //button.setText(String.valueOf(countFile - 1));
                         fileContainer.removeFile(mFileItem.getPath());
                         viewModel.setCountOfFiles(fileContainer.size());
-                        
+
                     }
                 }
             });

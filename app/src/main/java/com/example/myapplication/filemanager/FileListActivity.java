@@ -11,13 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.myapplication.FileTransfer;
 import com.example.myapplication.R;
-import com.example.myapplication.SingleFragmentActivity;
 import com.example.myapplication.container.SharedViewModel;
-import com.example.myapplication.wifi.TempFileTransfer;
-
-import java.io.File;
 
 public class FileListActivity extends AppCompatActivity {
 
