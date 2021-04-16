@@ -18,10 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.container.SharedViewModel;
 
 import java.util.List;
 import java.util.Stack;
@@ -34,6 +36,8 @@ public class FileListFragment extends Fragment {
     Button button;
     private     Stack<FileItem> mFileStack;
     private static final String ARG_FOLDER_PATH = "folder_path";
+
+    private SharedViewModel viewModel;
 
 
 
@@ -57,8 +61,6 @@ public class FileListFragment extends Fragment {
 
     }
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -70,6 +72,13 @@ public class FileListFragment extends Fragment {
 
         updateUI(mCurrentDir);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        //viewModel.setCountOfFiles(4);
     }
 
     @Override
@@ -149,9 +158,12 @@ public class FileListFragment extends Fragment {
                     if(isChecked){
                       //  button.setText(String.valueOf(countFile + 1));
                         fileContainer.setFile(mFileItem.getPath(),mFileItem);
+                        viewModel.setCountOfFiles(fileContainer.size());
                     }else {
                         //button.setText(String.valueOf(countFile - 1));
                         fileContainer.removeFile(mFileItem.getPath());
+                        viewModel.setCountOfFiles(fileContainer.size());
+                        
                     }
                 }
             });
