@@ -26,10 +26,20 @@ public class WifiConnect {
         wifiManager = (WifiManager) this.context.getSystemService(this.context.WIFI_SERVICE);
     }
 
-    public void ConnectToSpecificNetwork(String SSID, String KEY) {
+    public void ConnectToProtectedNetwork(String SSID, String KEY) {
         wifiConfiguration.SSID = "\"" + SSID + "\"";
         wifiConfiguration.preSharedKey = "\"" + KEY + "\"";
+        helper(SSID);
 
+    }
+    public void ConnectToOpenNetwork(String SSID) {
+        wifiConfiguration.SSID = "\"" + SSID + "\"";
+        wifiConfiguration.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        helper(SSID);
+    }
+
+
+    private void helper(String SSID){
         int netId = wifiManager.addNetwork(wifiConfiguration);
         wifiManager.setWifiEnabled(true);
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -52,7 +62,7 @@ public class WifiConnect {
                 break;
             }
         }
-        
-
     }
+
+
 }
