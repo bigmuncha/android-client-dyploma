@@ -1,5 +1,6 @@
 package com.example.myapplication.filemanager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,16 +14,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.container.SharedViewModel;
 
+import java.io.File;
 import java.util.List;
 import java.util.Stack;
 
@@ -30,14 +36,16 @@ public class FileListFragment extends Fragment {
     private RecyclerView mFileRecyclerView;
     private FileAdapter mAdapter;
     private static final String rootDir = "/storage/emulated/0";
-    private String mCurrentDir;
+    private static String mCurrentDir;
     Button button;
-    private     Stack<FileItem> mFileStack;
+    FileContainer fileContainer;
     private static final String ARG_FOLDER_PATH = "folder_path";
-
+    private static int counter;
     private SharedViewModel viewModel;
 
-
+    public static String getCurrentDir(){
+        return mCurrentDir;
+    }
 
     public static FileListFragment newInstance(String path){
         Bundle args = new Bundle();
@@ -48,16 +56,26 @@ public class FileListFragment extends Fragment {
         return fragment;
     }
 
+    public static void startNewFragment(FragmentActivity act, String path){
+        FileListFragment newFragmenet = newInstance(path);
+        FragmentTransaction fragmentTransaction = act.getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container,newFragmenet);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState){
-        mFileStack = new Stack<>();
+
         super.onCreate(savedInstanceState);
 
         String dir = (String) getArguments().getSerializable(ARG_FOLDER_PATH);
         mCurrentDir = dir;
         Log.d("Create", mCurrentDir);
+        fileContainer = FileContainer.get(getContext());
 
     }
+
 
     @Nullable
     @Override
@@ -84,6 +102,7 @@ public class FileListFragment extends Fragment {
         super.onResume();
         updateUI(mCurrentDir);
     }
+
 
     private void updateUI(String path) {
         FileLab fileLab = FileLab.get(getActivity(), mCurrentDir);
@@ -141,7 +160,7 @@ public class FileListFragment extends Fragment {
         }
 
         public void bind(FileItem fileItem){
-            FileContainer fileContainer = FileContainer.get(getContext());
+
 
             mFileItem = fileItem;
             mNameTextView.setText(mFileItem.getName());
@@ -156,12 +175,15 @@ public class FileListFragment extends Fragment {
                     if(isChecked){
                       //  button.setText(String.valueOf(countFile + 1));
                         fileContainer.setFile(mFileItem.getPath(),mFileItem);
+                        Log.d("check", String.valueOf(fileContainer.size()) + "OMAR ");
                         viewModel.setCountOfFiles(fileContainer.size());
+                        counter++;
                     }else {
                         //button.setText(String.valueOf(countFile - 1));
                         fileContainer.removeFile(mFileItem.getPath());
+                        Log.d("check there", String.valueOf(fileContainer.size()) + "OMAR ");
                         viewModel.setCountOfFiles(fileContainer.size());
-
+                        counter--;
                     }
                 }
             });
@@ -179,11 +201,12 @@ public class FileListFragment extends Fragment {
         private int makeIcon(FileItem mFileItem) {
             if(mFileItem.isIsFolder()){
                 return R.drawable.ic_folder;
-            }else if(mFileItem.getExtension().equals("jpg")|| mFileItem.getExtension().equals( "png")){
+            }else if(mFileItem.getExtension().equalsIgnoreCase("jpg")|| mFileItem.getExtension().equalsIgnoreCase( "png")
+                    ||mFileItem.getExtension().equalsIgnoreCase("jpeg")){
                 return R.drawable.ic_image;
-            }else if(mFileItem.getExtension().equals("mp4")){
+            }else if(mFileItem.getExtension().equalsIgnoreCase("mp4")){
                 return R.drawable.ic_video;
-            }else if(mFileItem.getExtension().equals("mp3")){
+            }else if(mFileItem.getExtension().equalsIgnoreCase("mp3")){
                 return R.drawable.ic_audio;
             }else{
                 return R.drawable.ic_file;
@@ -193,9 +216,12 @@ public class FileListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             if (mFileItem.isIsFolder()) {
-                Intent intent = FileManagerActivity.newIntent(getActivity(), mFileItem.getPath());
+
+                Log.d("NEW ACTIVITY", String.valueOf(fileContainer.size()));
+                Intent intent = FileManagerActivity.newIntent(getActivity(), mFileItem.getPath(), String.valueOf(counter));
                 Log.d("CLICK", mFileItem.getPath());
-                startActivity(intent);
+                Log.d("CLICK", String.valueOf(fileContainer.size()) + "OMAR ");
+                startNewFragment(getActivity(),mFileItem.getPath());
             }else{
                 Toast.makeText(getContext(), "Its file " + mFileItem.getExtension(), Toast.LENGTH_SHORT).show();
               /*  Log.d("File","FILE" + mFileItem.getName());
@@ -210,9 +236,7 @@ public class FileListFragment extends Fragment {
                */
             }
         }
-        public List<FileItem> getStackFiles(){
-            return mFileStack;
-        }
 
     }
+
 }

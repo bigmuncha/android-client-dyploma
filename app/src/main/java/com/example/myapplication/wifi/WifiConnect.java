@@ -94,7 +94,7 @@ public class WifiConnect {
             Log.i("info", d.toString()+"");
             return parseGateway(d.toString());
         }
-        return "";
+        return null;
 
     }
 

@@ -22,6 +22,7 @@ public class FileItem {
     private boolean mIsFolder;
     private  String mExtension;
     private long mSize;
+    private String mParentFolder;
 
     public  String createRequest(){
         return mName + "/" + mExtension;
@@ -35,6 +36,7 @@ public class FileItem {
         mIsFolder = f.isDirectory();
         mExtension = extractExtension(mName);
         mDate = recognizeDate(f);
+        mParentFolder = extractParentFolder(path);
        // mDate = Files.readAttributes(Paths.get(path),BasicFileAttributes.class).creationTime().toString();
         f=null;
     }
@@ -53,7 +55,13 @@ public class FileItem {
     }
 
 
-
+    public static String extractParentFolder(String path){
+        int i = path.lastIndexOf('/');
+        if(i>0){
+            return path.substring(0,i);
+        }
+        return null;
+    }
 
     public static String extractName(String path) {
         int i = path.lastIndexOf('/');
@@ -85,5 +93,9 @@ public class FileItem {
 
     public String getDate() {
         return mDate;
+    }
+
+    public String getParentFolder() {
+        return mParentFolder;
     }
 }

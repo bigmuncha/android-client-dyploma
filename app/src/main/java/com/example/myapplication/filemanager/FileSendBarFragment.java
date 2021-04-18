@@ -2,10 +2,12 @@ package com.example.myapplication.filemanager;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,18 +18,24 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplication.FileTransfer;
 import com.example.myapplication.R;
 import com.example.myapplication.container.SharedViewModel;
+import com.example.myapplication.wifi.WifiConnect;
+
+import java.io.File;
+import java.io.IOException;
 
 public class FileSendBarFragment extends Fragment {
-    private static final String ARG_SEND_BAR = "send_bar";
+    private static final String ARG_SEND_BAR = "count_files";
     Button transferButton;
     Button fileCountButton;
+    String currentCountFiles;
     private SharedViewModel viewModel;
 
-    public static FileSendBarFragment newInstance(){
+    public static FileSendBarFragment newInstance(String count){
         Bundle args = new Bundle();
-        //args.putSerializable(ARG_SEND_BAR,0);
+        args.putSerializable(ARG_SEND_BAR,count);
+
         FileSendBarFragment fragment = new FileSendBarFragment();
-        //fragment.setArguments(args);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -36,13 +44,17 @@ public class FileSendBarFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // int count = (Integer) getArguments().getSerializable(ARG_SEND_BAR);
+        String count = (String) getArguments().getSerializable(ARG_SEND_BAR);
+        currentCountFiles = count;
+        Log.d("BAR" , String.valueOf(currentCountFiles));
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
         viewModel.getCountOfFiles().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
@@ -59,10 +71,15 @@ public class FileSendBarFragment extends Fragment {
                 false);
         transferButton = view.findViewById(R.id.transfer_button);
         fileCountButton = view.findViewById(R.id.file_amount);
+        fileCountButton.setText(currentCountFiles);
         transferButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SendFiles(view);
+                try {
+                    SendFiles(view);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         return view;
@@ -71,15 +88,24 @@ public class FileSendBarFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+
     }
 
     public View getCountButton(){
         return fileCountButton;
     }
 
-    public void SendFiles(View view){
+    public void SendFiles(View view) throws IOException {
         FileContainer fileContainer = FileContainer.get(getContext());
         fileContainer.printer();
-        FileTransfer.SendMultipleFiles("192.168.43.1",FileTransfer.getTransferPort(), FileContainer.getFiles());
+        WifiConnect wifiConnect = new WifiConnect(getContext());
+        String ip = wifiConnect.getRouterIp();
+        if(ip != null) {
+            FileTransfer.SendMultipleFiles(ip, FileTransfer.getTransferPort(), FileContainer.getFiles());
+        }else{
+            Toast.makeText(getContext(), "Can not retreive gateway", Toast.LENGTH_SHORT).show();
+
+        }
     }
 }
