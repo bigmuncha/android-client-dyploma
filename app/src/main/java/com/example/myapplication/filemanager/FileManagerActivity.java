@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplication.R;
 import com.example.myapplication.container.SharedViewModel;
 
-public class FileListActivity extends AppCompatActivity {
+public class FileManagerActivity extends AppCompatActivity {
 
     private SharedViewModel viewModel;
 
@@ -22,7 +22,7 @@ public class FileListActivity extends AppCompatActivity {
     private static final String EXTRA_FILE_PATH =
             "com.example.myapplication.filemanager.folder_path";
     public static Intent newIntent(Context packageContext, String path){
-        Intent intent = new Intent(packageContext,FileListActivity.class);
+        Intent intent = new Intent(packageContext, FileManagerActivity.class);
         intent.putExtra(EXTRA_FILE_PATH,path);
         return intent;
     }

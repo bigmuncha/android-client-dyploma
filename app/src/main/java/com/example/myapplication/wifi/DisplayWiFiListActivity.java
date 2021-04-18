@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -105,6 +106,16 @@ public class DisplayWiFiListActivity extends AppCompatActivity implements MyAdap
         Log.d(TAG, "Click");
         Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
         WifiConnect connection = new WifiConnect(this);
-        connection.ConnectToProtectedNetwork(adapter.getItem(position),"89287222482");
+        //connection.ConnectToProtectedNetwork(adapter.getItem(position),"89287222482");
+        //connection.ConnectToOpenNetwork(adapter.getItem(position));
+        Toast.makeText(this, "Try recognizze ip" , Toast.LENGTH_SHORT).show();
+
+
+        try {
+            Toast.makeText(this,"Router ip: " + connection.getRouterIp(),Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

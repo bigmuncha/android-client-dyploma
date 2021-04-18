@@ -80,6 +80,6 @@ public class FileSendBarFragment extends Fragment {
     public void SendFiles(View view){
         FileContainer fileContainer = FileContainer.get(getContext());
         fileContainer.printer();
-        FileTransfer.SendMultipleFiles("192.168.43.133",FileTransfer.getTransferPort(), FileContainer.getFiles());
+        FileTransfer.SendMultipleFiles("192.168.43.1",FileTransfer.getTransferPort(), FileContainer.getFiles());
     }
 }

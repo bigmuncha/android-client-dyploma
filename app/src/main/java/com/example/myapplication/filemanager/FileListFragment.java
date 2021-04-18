@@ -1,6 +1,5 @@
 package com.example.myapplication.filemanager;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -195,7 +193,7 @@ public class FileListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             if (mFileItem.isIsFolder()) {
-                Intent intent = FileListActivity.newIntent(getActivity(), mFileItem.getPath());
+                Intent intent = FileManagerActivity.newIntent(getActivity(), mFileItem.getPath());
                 Log.d("CLICK", mFileItem.getPath());
                 startActivity(intent);
             }else{

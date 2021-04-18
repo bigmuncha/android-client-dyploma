@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".filemanager.FileListActivity"
+            android:name=".filemanager.FileManagerActivity"
             tools:ignore="MissingClass" />
     </application>
 

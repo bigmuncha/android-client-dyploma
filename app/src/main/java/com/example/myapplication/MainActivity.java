@@ -16,7 +16,7 @@ import java.io.*;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.myapplication.filemanager.FileListActivity;
+import com.example.myapplication.filemanager.FileManagerActivity;
 import com.example.myapplication.wifi.DisplayWiFiListActivity;
 import com.example.myapplication.wifi.WifiApManager;
 
@@ -59,14 +59,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendMessage (View view) throws IOException {
 
-        Intent intent = new Intent(MainActivity.this, FileListActivity.class);
+        Intent intent = new Intent(MainActivity.this, FileManagerActivity.class);
         startActivity(intent);
 
         //FileTransfer.SendOneFile("192.168.43.133",9999,"/storage/emulated/0/omar.txt");
 
     }
     public void recvMessage (View view) throws IOException {
-        FileTransfer.RecvMultipleFiles(FileTransfer.getTransferPort(),FileTransfer.storageDirectory);
+        Toast.makeText(this,"Turn on recv" ,Toast.LENGTH_SHORT).show();
+        FileTransfer.RecvMultipleFiles(FileTransfer.getTransferPort(),FileTransfer.storageDirectory,this);
     }
 
 
