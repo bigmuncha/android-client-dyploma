@@ -1,6 +1,7 @@
 package com.example.myapplication.filemanager;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,8 +17,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.FileTransfer;
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.container.SharedViewModel;
+import com.example.myapplication.wifi.DisplayWiFiListActivity;
 import com.example.myapplication.wifi.WifiConnect;
 
 import java.io.File;
@@ -101,11 +104,12 @@ public class FileSendBarFragment extends Fragment {
         fileContainer.printer();
         WifiConnect wifiConnect = new WifiConnect(getContext());
         String ip = wifiConnect.getRouterIp();
-        if(ip != null) {
-            FileTransfer.SendMultipleFiles(ip, FileTransfer.getTransferPort(), FileContainer.getFiles());
+        if(fileContainer.empty()){
+            Toast.makeText(getContext(), "Select files", Toast.LENGTH_SHORT).show();
         }else{
-            Toast.makeText(getContext(), "Can not retreive gateway", Toast.LENGTH_SHORT).show();
-
+            Intent intent =
+                    new Intent(getActivity(), DisplayWiFiListActivity.class);
+            startActivity(intent);
         }
     }
 }

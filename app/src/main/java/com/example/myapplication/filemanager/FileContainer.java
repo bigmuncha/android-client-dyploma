@@ -35,6 +35,10 @@ public class FileContainer {
         return mFiles.size();
     }
 
+    public boolean empty(){
+        return mFiles.size() == 0 ? true :false;
+    }
+
     public boolean isInclude(String key){
         return mFiles.containsKey(key);
     }
