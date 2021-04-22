@@ -69,6 +69,7 @@ public class WifiApManager {
             });
             thread.start();
         }else{
+            Log.d("OREO", "here");
             turnOnHotSpot();
         }
     }
@@ -86,6 +87,7 @@ public class WifiApManager {
         if (!isLocationPermissionEnable()) {
             return;
         }
+        Log.d("OREO", "here");
         if (mWifiManager != null) {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -97,14 +99,20 @@ public class WifiApManager {
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-
+            Log.d("OREO", "here");
             mWifiManager.startLocalOnlyHotspot(new WifiManager.LocalOnlyHotspotCallback() {
 
                 @Override
                 public void onStarted(WifiManager.LocalOnlyHotspotReservation reservation) {
                     super.onStarted(reservation);
                     mReservation = reservation;
+                    WifiConfiguration currentConfig = mReservation.getWifiConfiguration();
+                    Log.v("DANG", "THE PASSWORD IS: "
+                            + currentConfig.preSharedKey
+                            + " \n SSID is : "
+                            + currentConfig.SSID);
 
+                    //hotspotDetailsDialog();
                     isHotspotEnabled = true;
                 }
 

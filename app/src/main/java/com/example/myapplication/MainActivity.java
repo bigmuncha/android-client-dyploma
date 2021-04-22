@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.net.wifi.WifiConfiguration;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void recvMessage (View view) throws IOException {
         Toast.makeText(this,"Turn on recv" ,Toast.LENGTH_SHORT).show();
+
         FileTransfer.RecvMultipleFiles(FileTransfer.getTransferPort(),FileTransfer.storageDirectory,this);
     }
 
@@ -79,15 +81,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void hotSpotHandler(View view){
-        //wifiApManager.configureHotspot("OMar");
-       // wifiApManager.turnOnHotSpotOnAllSdkVersion();
-        //WifiConfiguration temp = wifiApManager.getWifiApConfiguration();
+        wifiApManager.configureHotspot("OMar");
+        wifiApManager.turnOnHotSpotOnAllSdkVersion();
+      //  WifiConfiguration temp = wifiApManager.getWifiApConfiguration();
 
-
-
-
-
-        //Log.d("MAIN", temp.SSID);
+      //  Log.d("MAIN", temp.SSID);
     }
 
 

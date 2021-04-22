@@ -102,14 +102,17 @@ public class FileSendBarFragment extends Fragment {
     public void SendFiles(View view) throws IOException {
         FileContainer fileContainer = FileContainer.get(getContext());
         fileContainer.printer();
+
         WifiConnect wifiConnect = new WifiConnect(getContext());
         String ip = wifiConnect.getRouterIp();
+
         if(fileContainer.empty()){
             Toast.makeText(getContext(), "Select files", Toast.LENGTH_SHORT).show();
         }else{
-            Intent intent =
-                    new Intent(getActivity(), DisplayWiFiListActivity.class);
-            startActivity(intent);
+            FileTransfer.SendMultipleFiles(ip,FileTransfer.getTransferPort(),FileContainer.getFiles());
+         //   Intent intent =
+          //          new Intent(getActivity(), DisplayWiFiListActivity.class);
+           // startActivity(intent);
         }
     }
 }

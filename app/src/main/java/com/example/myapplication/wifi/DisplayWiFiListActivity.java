@@ -112,10 +112,8 @@ public class DisplayWiFiListActivity extends AppCompatActivity implements MyAdap
         connection.ConnectToOpenNetwork(adapter.getItem(position));
         Toast.makeText(this, "Try recognizze ip" , Toast.LENGTH_SHORT).show();
 
-
         try {
             Toast.makeText(this,"Router ip: " + connection.getRouterIp(),Toast.LENGTH_SHORT).show();
-            FileTransfer.SendMultipleFiles(connection.getRouterIp(),FileTransfer.getTransferPort(), FileContainer.getFiles());
         } catch (IOException e) {
             e.printStackTrace();
         }
