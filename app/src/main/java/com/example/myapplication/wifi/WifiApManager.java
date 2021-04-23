@@ -106,6 +106,7 @@ public class WifiApManager {
                 public void onStarted(WifiManager.LocalOnlyHotspotReservation reservation) {
                     super.onStarted(reservation);
                     mReservation = reservation;
+                    
                     WifiConfiguration currentConfig = mReservation.getWifiConfiguration();
                     Log.v("DANG", "THE PASSWORD IS: "
                             + currentConfig.preSharedKey

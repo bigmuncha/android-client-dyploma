@@ -1,4 +1,4 @@
-package com.example.myapplication.wifi;
+package com.example.myapplication;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.myapplication.R;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class MyAdapter  extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private LayoutInflater mInflater;
     private List<String> mData;
     private ItemClickListener mClickListener;
-    MyAdapter(Context context, List<String> data){
+    public MyAdapter(Context context, List<String> data){
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -56,11 +54,11 @@ public class MyAdapter  extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    String getItem(int id){
+    public String getItem(int id){
         return mData.get(id);
     }
 
-    void setClickListener(ItemClickListener itemClickListener){
+    public void setClickListener(ItemClickListener itemClickListener){
         this.mClickListener = itemClickListener;
     }
     public interface ItemClickListener {

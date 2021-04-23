@@ -17,6 +17,8 @@ import java.io.*;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.myapplication.bluetooth.BluetoothActivity;
+import com.example.myapplication.bluetooth.SecondBluetoothActivity;
 import com.example.myapplication.filemanager.FileManagerActivity;
 import com.example.myapplication.wifi.DisplayWiFiListActivity;
 import com.example.myapplication.wifi.WifiApManager;
@@ -127,5 +129,10 @@ public class MainActivity extends AppCompatActivity {
                         .show();
             }
         }
+    }
+
+    public void TurnOnBle(View view) {
+        Intent intent = new Intent(MainActivity.this, SecondBluetoothActivity.class);
+        startActivity(intent);
     }
 }

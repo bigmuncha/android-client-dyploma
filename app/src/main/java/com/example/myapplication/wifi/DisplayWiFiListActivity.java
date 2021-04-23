@@ -15,9 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.FileTransfer;
+import com.example.myapplication.MyAdapter;
 import com.example.myapplication.R;
-import com.example.myapplication.filemanager.FileContainer;
 
 import java.io.IOException;
 import java.util.ArrayList;
