@@ -29,6 +29,7 @@ import com.example.myapplication.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class BluetoothListActivity extends AppCompatActivity implements MyAdapter.ItemClickListener{
 
@@ -63,7 +64,14 @@ public class BluetoothListActivity extends AppCompatActivity implements MyAdapte
 
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         stringres = new ArrayList<>();
+        Set<BluetoothDevice> deviceSet = bluetoothAdapter.getBondedDevices();
         mapa = new HashMap<>();
+        for(BluetoothDevice device:deviceSet){
+            String deviceName = device.getName();
+            String deviceHardwareAddress = device.getAddress(); // MAC address
+            stringres.add(deviceName + '\n' + deviceHardwareAddress);
+            mapa.put(deviceHardwareAddress,device);
+        }
        bluetoothConnectivity = new BluetoothConnectivity(getApplicationContext());
         bluetoothScanning();
     }

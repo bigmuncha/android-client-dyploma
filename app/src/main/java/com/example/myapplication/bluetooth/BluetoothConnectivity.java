@@ -162,6 +162,7 @@ public class BluetoothConnectivity {
                 try {
                     bytes = mmInStream.read(buffer);
                     Toast.makeText(mContext, FileTransfer.requestParser(buffer),Toast.LENGTH_SHORT).show();
+                    Log.d("RECV BLUETOOTH", FileTransfer.requestParser(buffer));
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
