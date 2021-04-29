@@ -29,8 +29,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".bluetooth.SecondBluetoothActivity"></activity>
-        <activity android:name=".bluetooth.BluetoothActivity" />
+        <activity android:name=".bluetooth.BluetoothListActivity"></activity>
         <activity android:name=".wifi.DisplayWiFiListActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

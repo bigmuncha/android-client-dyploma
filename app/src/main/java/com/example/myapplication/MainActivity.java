@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.net.wifi.WifiConfiguration;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -17,8 +16,8 @@ import java.io.*;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.myapplication.bluetooth.BluetoothActivity;
-import com.example.myapplication.bluetooth.SecondBluetoothActivity;
+import com.example.myapplication.bluetooth.BluetoothConnectivity;
+import com.example.myapplication.bluetooth.BluetoothListActivity;
 import com.example.myapplication.filemanager.FileManagerActivity;
 import com.example.myapplication.wifi.DisplayWiFiListActivity;
 import com.example.myapplication.wifi.WifiApManager;
@@ -69,9 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void recvMessage (View view) throws IOException {
-        Toast.makeText(this,"Turn on recv" ,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"Turn on recv" ,Toast.LENGTH_SHORT).show();
 
-        FileTransfer.RecvMultipleFiles(FileTransfer.getTransferPort(),FileTransfer.storageDirectory,this);
+        //FileTransfer.RecvMultipleFiles(FileTransfer.getTransferPort(),FileTransfer.storageDirectory,this);
+        BluetoothConnectivity bluetoothConnectivity = new BluetoothConnectivity(getApplicationContext());
+        bluetoothConnectivity.acceptDevice();
     }
 
 
@@ -131,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void TurnOnBle(View view) {
-        Intent intent = new Intent(MainActivity.this, SecondBluetoothActivity.class);
+    public void bluetoothActivityStart(View view) {
+        Intent intent = new Intent(MainActivity.this, BluetoothListActivity.class);
         startActivity(intent);
     }
 }
